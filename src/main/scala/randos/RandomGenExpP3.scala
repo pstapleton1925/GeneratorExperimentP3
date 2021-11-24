@@ -3,6 +3,7 @@ package randos
 import scala.io._
 import scala.util.Random
 import com.github.tototoshi.csv._
+import scala.collection.mutable.ArrayBuffer
 
 object RandomGenExpP3 extends App {
 
@@ -12,6 +13,13 @@ object RandomGenExpP3 extends App {
     
     val recordTypes = List("Screeners", "Recruiters", "Qualified Lead", "Contact Attempts", "Screening", "Offers")
     
+    var screenersArray = new ArrayBuffer[List[String]](0)
+    var recruitersArray = new ArrayBuffer[List[String]](0)
+    var qualLeadsArray = new ArrayBuffer[List[String]](0)
+    var contactAttemptsArray = new ArrayBuffer[List[String]](0)
+    var screeningArray = new ArrayBuffer[List[String]](0)
+    var offersArray = new ArrayBuffer[List[String]](0)
+
     val schemaScreeners = List("id", "first_name", "last_name")
     val schemaRecruiters = List("id", "first_name", "last_name")
     val schemaQualifiedLead = List("id", "first_name", "last_name", "university", "major", "email", "home_state")
@@ -84,24 +92,41 @@ object RandomGenExpP3 extends App {
 
     }
 
+    def generateBatchPeople: Unit = {
+
+      var batchArray = new ArrayBuffer[List[String]](0)
+
+      for (i<-1 to 3) {
+        val nr = generateRecruiter
+        batchArray += nr
+        recruitersArray += nr
+      }
+      for (i<-1 to 2) {
+        val ns = generateScreener
+        batchArray += ns
+        screenersArray += ns
+      }
+      for (i<-1 to 30) {
+        val nql = generaterQualifiedLead
+        batchArray += nql
+        qualLeadsArray += nql
+      }
+
+      // return batchArray
+
+    }
+
+    generateBatchPeople
+
     println(s"""
-Test Screener 1: ${generateScreener.mkString(" ")}
-Test Screener 2: ${generateScreener.mkString(" ")}
 
-Test Recruiter 1: ${generateRecruiter.mkString(" ")}
-Test Recruiter 1: ${generateRecruiter.mkString(" ")}
+${recruitersArray.mkString("\n")}
 
-Test Qualified Lead 1: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 2: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 3: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 4: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 5: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 6: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 7: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 8: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 9: ${generaterQualifiedLead.mkString(" ")}
-Test Qualified Lead 10: ${generaterQualifiedLead.mkString(" ")}
+${screenersArray.mkString("\n")}
+
+${qualLeadsArray.mkString("\n")}
       """)
 
   //}
+
 }
