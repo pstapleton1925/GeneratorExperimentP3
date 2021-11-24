@@ -58,19 +58,7 @@ object RandomGenExpP3 extends App {
 
     }
 
-    def assignRecruiter: String = {
-      val randomRecruiter = recruitersArray(random.nextInt((recruitersArray.length)))
-      val idRR = randomRecruiter(0).toString
-      return idRR
-    }
-
-    def assignScreener: String = {
-      val randomScreener = screenersArray(random.nextInt((screenersArray.length)))
-      val idRS = randomScreener(0).toString
-      return idRS
-    }
-
-    // need to update this so the email is created out of fn-ls using preconfiged email formats
+    // _ need to update this so the email is created out of fn-ls using preconfiged email formats
     def generaterQualifiedLead: List[String] = {
         
       idCounter += 1
@@ -88,9 +76,30 @@ object RandomGenExpP3 extends App {
       )
       return newQualifiedLead
 
+    }    
+
+    def assignRecruiter: String = {
+      val randomRecruiter = recruitersArray(random.nextInt((recruitersArray.length)))
+      val idRR = randomRecruiter(0).toString
+      return idRR
     }
 
+    def assignScreener: String = {
+      val randomScreener = screenersArray(random.nextInt((screenersArray.length)))
+      val idRS = randomScreener(0).toString
+      return idRS
+    }
+
+    def assignQualLead: String = {
+      val randomQualLead = qualLeadsArray(random.nextInt((qualLeadsArray.length)))
+      val idRQL = randomQualLead(0).toString
+      return idRQL
+    }
+
+    // _ move typeArray += actions into generateType methods
     def generateBatchPeople: Unit = {
+
+      // this is where we generate recruiters, screeners, and qualified leads
 
       var batchArray = new ArrayBuffer[List[String]](0)
 
@@ -117,16 +126,58 @@ object RandomGenExpP3 extends App {
 
     }
 
+    // WIP
+    def generateContactAttempt: List[String] = {
+
+      /* 
+      _ need to first pick a random ql (meeting conditions?)
+      _ then pull their assigned recruiter
+      _ need method(s) for dates, start_time, end_time
+      _ need to pull from contact method pool
+      _ maybe need to expand contact method pool?
+
+      */
+
+      val newContactAttempt = List(
+        "recruiter_id",
+        assignQualLead,
+        "contact_date",
+        "start_time",
+        "end_time",
+        "contact_method"
+      )
+
+      return newContactAttempt
+
+    }
+
+    // WIP
+    def generateScreening: Unit = {
+
+    }
+
+    // WIP
+    def generateOffer: Unit = {
+
+    }
+
+    // WIP
+    def generateBatchActions: Unit = {
+      
+      // this is where we generate contact attempts, screenings, and offers
+
+    }
+
+    println("""
+generating a batch...
+  """)
+
     generateBatchPeople
 
-/*
     println(s"""
-    assignRecruiter: $assignRecruiter
-    """)
-*/
 
-
-    println(s"""
+testing assignRecruiter...
+assigned recruiter id: $assignRecruiter
 
 ${recruitersArray.mkString("\n")}
 
@@ -140,8 +191,6 @@ ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(0))}
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(1))}
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(2))}
       """)
-
-
 
   //}
 
