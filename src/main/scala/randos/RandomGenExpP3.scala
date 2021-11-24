@@ -28,7 +28,7 @@ object RandomGenExpP3 extends App {
     var screeningArray = new ArrayBuffer[List[String]](0)
     var offersArray = new ArrayBuffer[List[String]](0)
     
-    def getRandomElement(pool: List[String], random: Random): String = pool(random.nextInt(pool.length))
+    def getRandomElement(pool: List[String], random: Random): String = pool(random.nextInt(pool.length - 1))
 
     def mapSchemaToValues(schema: List[String], values: List[String]): Map[String, String] = (schema zip values).toMap
 
@@ -79,19 +79,19 @@ object RandomGenExpP3 extends App {
     }    
 
     def assignRecruiter: String = {
-      val randomRecruiter = recruitersArray(random.nextInt((recruitersArray.length)))
+      val randomRecruiter = recruitersArray(random.nextInt((recruitersArray.length - 1)))
       val idRR = randomRecruiter(0).toString
       return idRR
     }
 
     def assignScreener: String = {
-      val randomScreener = screenersArray(random.nextInt((screenersArray.length)))
+      val randomScreener = screenersArray(random.nextInt((screenersArray.length - 1)))
       val idRS = randomScreener(0).toString
       return idRS
     }
 
     def assignQualLead: String = {
-      val randomQualLead = qualLeadsArray(random.nextInt((qualLeadsArray.length)))
+      val randomQualLead = qualLeadsArray(random.nextInt((qualLeadsArray.length - 1)))
       val idRQL = randomQualLead(0).toString
       return idRQL
     }
@@ -129,22 +129,26 @@ object RandomGenExpP3 extends App {
     // WIP
     def generateContactAttempt: List[String] = {
 
+      idCounter += 1
+      val tmpQualLead = assignQualLead
+      val tmpAssignedRecruiter = findAssignedRecruiter(tmpQualLead)
+
       /* 
-      _ need to first pick a random ql (meeting conditions?)
-      _ then pull their assigned recruiter
+      X need to first pick a random ql 
+        _ (meeting conditions?)
+      X then pull their assigned recruiter
       _ need method(s) for dates, start_time, end_time
       _ need to pull from contact method pool
       _ maybe need to expand contact method pool?
-
       */
-
+      
       val newContactAttempt = List(
-        "recruiter_id",
-        assignQualLead,
+        tmpAssignedRecruiter,
+        tmpQualLead,
         "contact_date",
         "start_time",
         "end_time",
-        "contact_method"
+        getRandomElement(RGStoredVals.poolContact_method, random)
       )
 
       return newContactAttempt
@@ -159,6 +163,13 @@ object RandomGenExpP3 extends App {
     // WIP
     def generateOffer: Unit = {
 
+    }
+
+    def findAssignedRecruiter(qualLead: String): String = {      
+      val qlRecord = qualLeadsArray(qualLead.toInt)
+      // this currently pulls a specified element, but it might be better to have the generators make maps and find by key
+      val qlar = qlRecord(8)
+      return qlar
     }
 
     // WIP
@@ -190,6 +201,10 @@ testing mapping...
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(0))}
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(1))}
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(2))}
+
+testing contact attempt...
+
+${generateContactAttempt.mkString(" ")}
       """)
 
   //}
