@@ -4,8 +4,19 @@ import scala.io._
 import scala.util.Random
 import com.github.tototoshi.csv._
 import scala.collection.mutable.ArrayBuffer
+import java.util.Properties
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
-// need to switch from list[String] to JSON format for events/records
+/*  
+    _ need to switch from list[String] to JSON format for events/records
+      thinking list[string] -> map [string, string] -> string(json format)?
+    _ separate stored vals into a different file
+      _ recordTypes
+      _ schemas
+      _ filepaths
+      _ pools and pool builder?
+    _ new file for kafka producer
+*/
 
 object RandomGenExpP3 extends App {
 
@@ -57,6 +68,8 @@ object RandomGenExpP3 extends App {
     val poolScreening_type = List("Spark", "Standard", "Business Analyst") //examples from requirements doc
   
     def getRandomElement(pool: List[String], random: Random): String = pool(random.nextInt(pool.length))
+
+    def mapSchemaToValues(schema: List[String], values: List[String]): Map[String, String] = (schema zip values).toMap
 
     def generateScreener: List[String] = {
 
@@ -136,6 +149,9 @@ object RandomGenExpP3 extends App {
         qualLeadsArray += nql
       }
 
+      // either in the method or another, need to send each record to kafka topic
+      // maybe a separate method that combines with generateBatchActions?
+
       // return batchArray
 
     }
@@ -156,6 +172,12 @@ ${recruitersArray.mkString("\n")}
 ${screenersArray.mkString("\n")}
 
 ${qualLeadsArray.mkString("\n")}
+
+testing mapping...
+
+${mapSchemaToValues(schemaRecruiters, recruitersArray(0))}
+${mapSchemaToValues(schemaRecruiters, recruitersArray(1))}
+${mapSchemaToValues(schemaRecruiters, recruitersArray(2))}
       """)
 
 
