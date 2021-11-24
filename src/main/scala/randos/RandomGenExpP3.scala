@@ -12,6 +12,18 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
     _ need to switch from list[String] to JSON format for events/records
       thinking list[string] -> Map[string, string] -> String(json format)?
     _ build kafka producer
+    _ drop qual lead from arraybuffer if offer accepted or rejected
+      _ maybe store dropped qual leads in new accepted and rejected arraybuffers?
+    _ move a percentage of qual leads into "no response" arraybuffer 
+      and drop from og arraybuffer after a certain number of contact attempts?
+      _ could have extra fields that track contact attempts
+        _ # of attempts
+        _ response or nah
+      - this is probably unneccesary
+    _ conditions for screening?
+    _ screenedQualLeads arraybuffer?
+    _ conditions for offer?
+    
 */
 
 object RandomGenExpP3 extends App {
