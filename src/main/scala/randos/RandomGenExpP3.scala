@@ -5,10 +5,13 @@ import scala.util.Random
 import com.github.tototoshi.csv._
 import scala.collection.mutable.ArrayBuffer
 
+// need to switch from list[String] to JSON format for events/records
+
 object RandomGenExpP3 extends App {
 
   //def main: Unit = {
 
+    var idCounter = 0
     val random = new Random
     
     val recordTypes = List("Screeners", "Recruiters", "Qualified Lead", "Contact Attempts", "Screening", "Offers")
@@ -53,14 +56,16 @@ object RandomGenExpP3 extends App {
     val poolContact_method = List("Phone", "Email", "SMS") //examples from requirements doc
     val poolScreening_type = List("Spark", "Standard", "Business Analyst") //examples from requirements doc
   
-    def getRandomElement(pool: List[String], random: Random): String = pool(random.nextInt(pool.length - 1))
+    def getRandomElement(pool: List[String], random: Random): String = pool(random.nextInt(pool.length))
 
     def generateScreener: List[String] = {
 
+      idCounter += 1
       //generates a screener using defined schema
       val newScreener = List(
-      getRandomElement(poolFirst_name, random),
-      getRandomElement(poolLast_name, random)
+        idCounter.toString,
+        getRandomElement(poolFirst_name, random),
+        getRandomElement(poolLast_name, random)
       )
       return newScreener
 
@@ -68,25 +73,44 @@ object RandomGenExpP3 extends App {
 
     def generateRecruiter: List[String] = {
 
+      idCounter += 1
       //generates a recruiter using defined schema
       val newRecruiter = List(
-      getRandomElement(poolFirst_name, random),
-      getRandomElement(poolLast_name, random)
+        idCounter.toString,
+        getRandomElement(poolFirst_name, random),
+        getRandomElement(poolLast_name, random)
       )
       return newRecruiter
 
     }
 
+    def assignRecruiter: String = {
+      val randomRecruiter = recruitersArray(random.nextInt((recruitersArray.length)))
+      val idRR = randomRecruiter(0).toString
+      return idRR
+    }
+
+    def assignScreener: String = {
+      val randomScreener = screenersArray(random.nextInt((screenersArray.length)))
+      val idRS = randomScreener(0).toString
+      return idRS
+    }
+
+    // need to update this so the email is created out of fn-ls using preconfiged email formats
     def generaterQualifiedLead: List[String] = {
         
+      idCounter += 1
       //generates a qualified lead using defined schema
       val newQualifiedLead = List(
-      getRandomElement(poolFirst_name, random),
-      getRandomElement(poolLast_name, random),
-      getRandomElement(poolUniversity, random),
-      getRandomElement(poolMajor, random), 
-      getRandomElement(poolEmails, random),
-      getRandomElement(poolStates, random)
+        idCounter.toString,
+        getRandomElement(poolFirst_name, random),
+        getRandomElement(poolLast_name, random),
+        getRandomElement(poolUniversity, random),
+        getRandomElement(poolMajor, random), 
+        getRandomElement(poolEmails, random),
+        getRandomElement(poolStates, random),
+        assignRecruiter,
+        assignScreener
       )
       return newQualifiedLead
 
@@ -118,6 +142,13 @@ object RandomGenExpP3 extends App {
 
     generateBatchPeople
 
+/*
+    println(s"""
+    assignRecruiter: $assignRecruiter
+    """)
+*/
+
+
     println(s"""
 
 ${recruitersArray.mkString("\n")}
@@ -126,6 +157,8 @@ ${screenersArray.mkString("\n")}
 
 ${qualLeadsArray.mkString("\n")}
       """)
+
+
 
   //}
 
