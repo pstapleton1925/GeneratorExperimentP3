@@ -10,7 +10,7 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
 /*  
     _ need to switch from list[String] to JSON format for events/records
-      thinking list[string] -> map [string, string] -> string(json format)?
+      thinking list[string] -> Map[string, string] -> String(json format)?
     _ build kafka producer
 */
 
@@ -35,12 +35,18 @@ object RandomGenExpP3 extends App {
     def generateScreener: List[String] = {
 
       idCounter += 1
-      //generates a screener using defined schema
+      
+      val tmpID = idCounter.toString()
+      val tmpFN = getRandomElement(RGStoredVals.poolFirst_name, random)
+      val tmpLN = getRandomElement(RGStoredVals.poolLast_name, random)
+      
       val newScreener = List(
-        idCounter.toString,
-        getRandomElement(RGStoredVals.poolFirst_name, random),
-        getRandomElement(RGStoredVals.poolLast_name, random)
+        tmpID,
+        tmpFN,
+        tmpLN
       )
+
+      screenersArray += newScreener
       return newScreener
 
     }
@@ -48,18 +54,24 @@ object RandomGenExpP3 extends App {
     def generateRecruiter: List[String] = {
 
       idCounter += 1
-      //generates a recruiter using defined schema
+
+      val tmpID = idCounter.toString()
+      val tmpFN = getRandomElement(RGStoredVals.poolFirst_name, random)
+      val tmpLN = getRandomElement(RGStoredVals.poolLast_name, random)
+      
       val newRecruiter = List(
-        idCounter.toString,
-        getRandomElement(RGStoredVals.poolFirst_name, random),
-        getRandomElement(RGStoredVals.poolLast_name, random)
+        tmpID,
+        tmpFN,
+        tmpLN
       )
+      
+      recruitersArray += newRecruiter
       return newRecruiter
 
     }
 
     // _ need to update this so the email is created out of fn-ls using preconfiged email formats
-    def generaterQualifiedLead: List[String] = {
+    def generateQualifiedLead: List[String] = {
         
       idCounter += 1
       //generates a qualified lead using defined schema
@@ -74,6 +86,8 @@ object RandomGenExpP3 extends App {
         assignRecruiter,
         assignScreener
       )
+      
+      qualLeadsArray += newQualifiedLead
       return newQualifiedLead
 
     }    
@@ -96,31 +110,26 @@ object RandomGenExpP3 extends App {
       return idRQL
     }
 
-    // _ move typeArray += actions into generateType methods
+    /* 
+    X move typeArray += actions into generateType methods
+    _ randomize number of each type (with similar ratios?)
+    */
     def generateBatchPeople: Unit = {
-
-      // this is where we generate recruiters, screeners, and qualified leads
 
       var batchArray = new ArrayBuffer[List[String]](0)
 
       for (i<-1 to 3) {
         val nr = generateRecruiter
         batchArray += nr
-        recruitersArray += nr
       }
       for (i<-1 to 2) {
         val ns = generateScreener
         batchArray += ns
-        screenersArray += ns
       }
       for (i<-1 to 30) {
-        val nql = generaterQualifiedLead
+        val nql = generateQualifiedLead
         batchArray += nql
-        qualLeadsArray += nql
       }
-
-      // either in the method or another, need to send each record to kafka topic
-      // maybe a separate method that combines with generateBatchActions?
 
       // return batchArray
 
@@ -129,39 +138,99 @@ object RandomGenExpP3 extends App {
     // WIP
     def generateContactAttempt: List[String] = {
 
-      idCounter += 1
-      val tmpQualLead = assignQualLead
-      val tmpAssignedRecruiter = findAssignedRecruiter(tmpQualLead)
-
       /* 
       X need to first pick a random ql 
         _ (meeting conditions?)
       X then pull their assigned recruiter
       _ need method(s) for dates, start_time, end_time
-      _ need to pull from contact method pool
+      X need to pull from contact method pool
       _ maybe need to expand contact method pool?
       */
+
+      idCounter += 1
+
+      val tmpID = idCounter.toString()
+      val tmpQualLead = assignQualLead
+      val tmpAssignedRecruiter = findAssignedRecruiter(tmpQualLead)
+      val tmpDate = generateDate
+      val tmpStart = "generateStart"
+      val tmpEnd = "generateEnd(tmpStart)"
+      val tmpCM = getRandomElement(RGStoredVals.poolContact_method, random)      
       
       val newContactAttempt = List(
+        tmpID,
         tmpAssignedRecruiter,
         tmpQualLead,
-        "contact_date",
-        "start_time",
-        "end_time",
-        getRandomElement(RGStoredVals.poolContact_method, random)
+        tmpDate,
+        tmpStart,
+        tmpEnd,
+        tmpCM
       )
 
+      contactAttemptsArray += newContactAttempt 
       return newContactAttempt
 
     }
 
     // WIP
-    def generateScreening: Unit = {
+    def generateScreening: List[String] = {
+
+      idCounter += 1
+
+      val tmpID = idCounter.toString()
+      val tmpAssignedScreener = "screener_id"
+      val tmpQualLead =  "ql_id"
+      val tmpDate =  "screening_date"
+      val tmpStart =  "start_time"
+      val tmpEnd = "end_time"
+      val tmpType =  "screening_type"
+      val tmpQTotal =  "question_number"
+      val tmpQAccepted =  "question_accepted"
+      
+      val newScreening = List(
+        tmpID,
+        tmpAssignedScreener,
+        tmpQualLead,
+        tmpDate,
+        tmpStart,
+        tmpEnd,
+        tmpType,
+        tmpQTotal,
+        tmpQAccepted
+      )
+
+      screeningArray += newScreening
+      return newScreening
 
     }
 
     // WIP
-    def generateOffer: Unit = {
+    def generateOffer: List[String] = {
+
+      idCounter += 1
+
+      val tmpID = idCounter.toString()
+      val tmpAssignedScreener = "screener_id"
+      val tmpAssignedRecruiter = "recruiter_id"
+      val tmpQualLead = "ql_id"
+      val tmpDateExtended = "offer_extended_date"
+      val tmpDateAction = "offer_action_date"
+      val tmpCM = "contact_method"
+      val tmpAction = "offer_action"
+
+      val newOffer = List(
+        tmpID,
+        tmpAssignedScreener,
+        tmpAssignedScreener,
+        tmpQualLead,
+        tmpDateExtended,
+        tmpDateAction,
+        tmpCM,
+        tmpAction
+      )
+
+      offersArray += newOffer
+      return newOffer
 
     }
 
@@ -170,6 +239,11 @@ object RandomGenExpP3 extends App {
       // this currently pulls a specified element, but it might be better to have the generators make maps and find by key
       val qlar = qlRecord(8)
       return qlar
+    }
+    
+    def generateDate: String = {
+      val test = "12/12/12"
+      return test
     }
 
     // WIP
@@ -202,9 +276,13 @@ ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(0))}
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(1))}
 ${mapSchemaToValues(RGStoredVals.schemaRecruiters, recruitersArray(2))}
 
-testing contact attempt...
+testing actions...
 
 ${generateContactAttempt.mkString(" ")}
+
+${generateScreening.mkString(" ")}
+
+${generateOffer.mkString(" ")}
       """)
 
   //}
