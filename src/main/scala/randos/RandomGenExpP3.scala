@@ -10,7 +10,8 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
 /*  
     _ need to switch from list[String] to JSON format for events/records
-      thinking list[string] -> Map[string, string] -> String(json format)?
+      _ thinking list[string] -> Map[string, string] -> String(json format)?
+      _ actually could probs do this with case classes...
     _ build kafka producer
     _ drop qual lead from arraybuffer if offer accepted or rejected
       _ maybe store dropped qual leads in new accepted and rejected arraybuffers?
