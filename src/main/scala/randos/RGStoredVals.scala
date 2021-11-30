@@ -41,5 +41,51 @@ object RGStoredVals {
   val poolStates = poolBuilder(sPath)
   val poolContact_method = List("Phone", "Email", "SMS") //examples from requirements doc
   val poolScreening_type = List("Spark", "Standard", "Business Analyst") //examples from requirements doc
-  
+
+    //idk if i need these or not  
+    case class Recruiter(id: String, first_name: String, last_name: String)
+    case class Screener(id: String, first_name: String, last_name: String)
+    
+    case class QualifiedLead(
+      id: String, 
+      first_name: String,
+      last_name: String,
+      university: String,
+      major: String,
+      email: String,
+      home_state: String,
+      recruiter_id: String,
+      screener_id: String
+    )
+    
+    case class ContactAttempt(
+      recruiter_id: String,
+      ql_id: String,
+      contact_date: String,
+      start_time: String,
+      end_time: String,
+      contact_method: String
+    )
+
+    case class Screening(
+     screener_id: String,
+     ql_id: String,
+     screening_date: String,
+     start_time: String,
+     end_time: String,
+     screening_type: String,
+     question_number: String,
+     question_accepted: String
+    )
+    
+    case class Offer(
+      screener_id: String,
+      recruiter_id: String,
+      ql_id: String,
+      offer_extended_date: String,
+      offer_action_date: String,
+      contact_method: String,
+      offer_action: String
+    )
+      
 }

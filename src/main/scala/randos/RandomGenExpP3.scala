@@ -1,7 +1,7 @@
 package randos
 
 import scala.io._
-import randos._
+import randos.RGStoredVals._
 import scala.util.Random
 import com.github.tototoshi.csv._
 import scala.collection.mutable.ArrayBuffer
@@ -11,7 +11,6 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 /*  
     _ need to switch from list[String] to JSON format for events/records
       _ thinking list[string] -> Map[string, string] -> String(json format)?
-      _ actually could probs do this with case classes...
     _ build kafka producer
     _ drop qual lead from arraybuffer if offer accepted or rejected
       _ maybe store dropped qual leads in new accepted and rejected arraybuffers?
@@ -43,66 +42,47 @@ object RandomGenExpP3 extends App {
     
     def getRandomElement(pool: List[String], random: Random): String = pool(random.nextInt(pool.length - 1))
 
-    def mapSchemaToValues(schema: List[String], values: List[String]): Map[String, String] = (schema zip values).toMap
-
-    def generateScreener: List[String] = {
-
-      idCounter += 1
-      
-      val tmpID = idCounter.toString()
-      val tmpFN = getRandomElement(RGStoredVals.poolFirst_name, random)
-      val tmpLN = getRandomElement(RGStoredVals.poolLast_name, random)
-      
-      val newScreener = List(
-        tmpID,
-        tmpFN,
-        tmpLN
-      )
-
-      screenersArray += newScreener
-      return newScreener
-
-    }
+    def mapSchemaToValues(schema: List[String], values: List[String]): Map[String, String] = (schema zip values).toMap  
 
     def generateRecruiter: List[String] = {
-
-      idCounter += 1
-
-      val tmpID = idCounter.toString()
-      val tmpFN = getRandomElement(RGStoredVals.poolFirst_name, random)
-      val tmpLN = getRandomElement(RGStoredVals.poolLast_name, random)
-      
+      idCounter += 1      
       val newRecruiter = List(
-        tmpID,
-        tmpFN,
-        tmpLN
-      )
-      
+        idCounter.toString(),
+        getRandomElement(poolFirst_name, random),
+        getRandomElement(poolLast_name, random)
+      )      
       recruitersArray += newRecruiter
       return newRecruiter
+    }  
 
+    def generateScreener: List[String] = {
+      idCounter += 1            
+      val newScreener = List(
+        idCounter.toString(),
+        getRandomElement(poolFirst_name, random),
+        getRandomElement(poolLast_name, random)
+      )
+      screenersArray += newScreener
+      return newScreener
     }
 
     // _ need to update this so the email is created out of fn-ls using preconfiged email formats
-    def generateQualifiedLead: List[String] = {
-        
+    def generateQualifiedLead: List[String] = {        
       idCounter += 1
-      //generates a qualified lead using defined schema
+      //generates a qualified lead
       val newQualifiedLead = List(
         idCounter.toString,
-        getRandomElement(RGStoredVals.poolFirst_name, random),
-        getRandomElement(RGStoredVals.poolLast_name, random),
-        getRandomElement(RGStoredVals.poolUniversity, random),
-        getRandomElement(RGStoredVals.poolMajor, random), 
-        getRandomElement(RGStoredVals.poolEmails, random),
-        getRandomElement(RGStoredVals.poolStates, random),
+        getRandomElement(poolFirst_name, random),
+        getRandomElement(poolLast_name, random),
+        getRandomElement(poolUniversity, random),
+        getRandomElement(poolMajor, random), 
+        getRandomElement(poolEmails, random),
+        getRandomElement(poolStates, random),
         assignRecruiter,
         assignScreener
-      )
-      
+      )      
       qualLeadsArray += newQualifiedLead
       return newQualifiedLead
-
     }    
 
     def assignRecruiter: String = {
